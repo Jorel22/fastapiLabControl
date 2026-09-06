@@ -53,24 +53,22 @@ jordan_montenegro:
     reports:
       junit: report-jordan.xml
 
-# Descomentar cuando la carpeta correspondiente esté en el repositorio.
-#
-# byron_bravo:
-#   stage: estudiantes
-#   script:
-#     - python -m pytest tests/byron_bravo/ -v --junitxml=report-byron.xml
-#   artifacts:
-#     when: always
-#     paths: [report-byron.xml]
-#     reports:
-#       junit: report-byron.xml
-#
-# jairo_jacome:
-#   stage: estudiantes
-#   script:
-#     - python -m pytest tests/jairo_jacome/ -v --junitxml=report-jairo.xml
-#   artifacts:
-#     when: always
-#     paths: [report-jairo.xml]
-#     reports:
-#       junit: report-jairo.xml
+byron_bravo:
+  stage: estudiantes
+  script:
+    - python -m pytest tests/byron_bravo/ -v --junitxml=report-byron.xml
+  artifacts:
+    when: always
+    paths: [report-byron.xml]
+    reports:
+      junit: report-byron.xml
+
+jairo_jacome:
+  stage: estudiantes
+  script:
+    - python -m pytest tests/jairo_jacome/ -v --junitxml=report-jairo.xml
+  artifacts:
+    when: always
+    paths: [report-jairo.xml]
+    reports:
+      junit: report-jairo.xml
