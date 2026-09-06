@@ -1,0 +1,76 @@
+# Integración continua — LabControl Mecánica ESPOCH
+# UPEC · Maestría en Ingeniería en Software · Calidad y Pruebas de Software
+# Grupo 1 · Unidad 3 · Tarea 1
+#
+# Cada `git push` levanta un contenedor limpio, instala las dependencias y
+# ejecuta las suites. Cada integrante tiene su propio job, de modo que
+# puede capturar su ejecución en verde como evidencia individual.
+# La pestaña Tests de cada pipeline lista prueba por prueba, gracias a los
+# informes JUnit que produce --junitxml.
+
+image: python:3.12
+
+stages:
+  - regresion
+  - estudiantes
+
+before_script:
+  - python --version
+  - python -m pip install --upgrade pip
+  - python -m pip install -r requirements.txt -r requirements-test.txt
+
+# --------------------------------------------------------------------------
+# Regresión del proyecto: las 62 pruebas de los RF del SRS, anteriores a
+# esta tarea. Si este job falla, algo se rompió para los tres.
+# --------------------------------------------------------------------------
+regresion_proyecto:
+  stage: regresion
+  script:
+    - python -m pytest tests/
+      --ignore=tests/byron_bravo
+      --ignore=tests/jairo_jacome
+      --ignore=tests/jordan_montenegro
+      -v --junitxml=report-regresion.xml
+  artifacts:
+    when: always
+    paths: [report-regresion.xml]
+    reports:
+      junit: report-regresion.xml
+
+# --------------------------------------------------------------------------
+# Un job por estudiante. Los tres corren en paralelo en la etapa
+# `estudiantes`; cada uno ejecuta sus pruebas unitarias y sus pruebas
+# automatizadas de API de la técnica de caja negra que tiene asignada.
+# --------------------------------------------------------------------------
+
+jordan_montenegro:
+  stage: estudiantes
+  script:
+    - python -m pytest tests/jordan_montenegro/ -v --junitxml=report-jordan.xml
+  artifacts:
+    when: always
+    paths: [report-jordan.xml]
+    reports:
+      junit: report-jordan.xml
+
+# Descomentar cuando la carpeta correspondiente esté en el repositorio.
+#
+# byron_bravo:
+#   stage: estudiantes
+#   script:
+#     - python -m pytest tests/byron_bravo/ -v --junitxml=report-byron.xml
+#   artifacts:
+#     when: always
+#     paths: [report-byron.xml]
+#     reports:
+#       junit: report-byron.xml
+#
+# jairo_jacome:
+#   stage: estudiantes
+#   script:
+#     - python -m pytest tests/jairo_jacome/ -v --junitxml=report-jairo.xml
+#   artifacts:
+#     when: always
+#     paths: [report-jairo.xml]
+#     reports:
+#       junit: report-jairo.xml
